@@ -6,5 +6,4 @@ const connectDatabase=()=> {
         console.log(e);
     });
 }
-module.exports = connectDatabase;   
-// connect("mongodb+srv://chat-application:chat-application1234@cluster0.lznpq.mongodb.net/Ecommarce",{useNewUrlParser:true, UseUnifiedTopology:true,useCreateIndex:true})
+module.exports = connectDatabase;
