@@ -1,65 +1,54 @@
+const catchAsyncError = require("../middlewires/error/catchAsyncError");
 const Product = require("../models/productModel");
-
+const ErrorHander = require("../utils/errorHandler");
 
 //Create Product
-exports.createProduct = async (req, res) => {
+exports.createProduct = catchAsyncError(async (req, res, next) => {
     const product = await Product.create(req.body);
     res.status(201).json({
         success: true,
         product
     });
-    // res.status(201).json({ message: "Alhamdu Lillah, Route is working" });
-}
+});
 
-exports.getAllProducts = async (req, res) => {
+exports.getAllProducts = catchAsyncError(async (req, res, next) => {
     const products = await Product.find();
     res.status(200).json({
         message: "Alhamdu Lillah, Route is working",
         products
     });
-}
-exports.getProduct = async (req, res) => {
+});
+//Get single product
+exports.getProduct = catchAsyncError(async (req, res, next) => {
     const { id } = req.params;
-    if (id.length !== 24) return errMessag(res);
     const product = await Product.findById(id);
-    if (!product) return errMessag(res);
-
+    if (!product) return next(new ErrorHander('Product not found!', 404));
     res.status(200).json({
         message: "Alhamdu Lillah, Route is working",
         product
     });
-}
-exports.updateProduct = async (req, res) => {
+});
+exports.updateProduct = catchAsyncError(async (req, res, next) => {
     const { id } = req.params;
-    if (id.length !== 24) return errMessag(res);
-
     let product = await Product.findById(id);
-
-    if (!product) return errMessag(res);
+    if (!product) return next(new ErrorHander('Product not found!', 404));
     product = await Product.findByIdAndUpdate(id, req.body, { new: true, runValidators: true, useFindAndModify: false });
     res.status(200).json({
         message: "Alhamdu Lillah, Route is working",
         success: true,
         product
     });
-}
-exports.deleteProduct = async (req, res) => {
+});
+exports.deleteProduct = catchAsyncError(async (req, res, next) => {
     const { id } = req.params;
-    if (id.length !== 24) return errMessag(res);
 
     const product = await Product.findById(id);
 
-    if (!product) return errMessag(res);
+    if (!product) return next(new ErrorHander('Product not found!', 404));
     await product.remove();
     res.status(200).json({
         message: "Product has been deleted succefully",
         success: true
     });
-}
+})
 
-function errMessag(res) {
-    return res.status(404).json({
-        success: false,
-        message: "Product not found!",
-    });
-}
