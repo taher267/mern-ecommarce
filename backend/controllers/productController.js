@@ -1,6 +1,7 @@
 const catchAsyncError = require("../middlewires/error/catchAsyncError");
 const Product = require("../models/productModel");
 const ErrorHander = require("../utils/errorHandler");
+const ApiFeatures = require('../utils/apiFeatures');
 
 //Create Product
 exports.createProduct = catchAsyncError(async (req, res, next) => {
@@ -12,7 +13,8 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
 });
 
 exports.getAllProducts = catchAsyncError(async (req, res, next) => {
-    const products = await Product.find();
+    const apiFeatures = new ApiFeatures(Product.find(), req.query).search();
+    const products = await apiFeatures.query;
     res.status(200).json({
         message: "Alhamdu Lillah, Route is working",
         products
