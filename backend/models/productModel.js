@@ -3,16 +3,19 @@ const { Schema, model } = require("mongoose");
 module.exports = model("Product", Schema({
     name: {
         type: String,
-        required: [true, "Please enter a product name!"]
+        required: [true, "Please enter a product name!"],
+        trim:true
     },
     description: {
         type: String,
-        required: [true, "Please enter a product description!"]
+        required: [true, "Please enter a product description!"],
+        trim:true
     },
     price: {
         type: Number,
         required: [true, "Please enter product price!"],
-        maxLength: [8, "Price con't more than 8 digits!"]
+        maxLength: [8, "Price con't more than 8 digits!"],
+        trim:true
     },
     rating: {
         type: Number,
@@ -30,7 +33,8 @@ module.exports = model("Product", Schema({
     },
     category: {
         type: String,
-        required: [true, "Please enter product category!"]
+        required: [true, "Please enter product category!"],
+        trim:true
     },
     stock: {
         type: Number,
@@ -44,7 +48,7 @@ module.exports = model("Product", Schema({
     },
     reviews: [
         {
-            name: { type: String, required: true },
+            name: { type: String, required: true,trim:true },
             rating: { type: Number, required: true },
             comment: { type: String, required: true }
         }
