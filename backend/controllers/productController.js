@@ -14,6 +14,7 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
 
 exports.getAllProducts = catchAsyncError(async (req, res, next) => {
     const perPage = 2;
+    const productCount = await Product.countDocuments();
     const apiFeatures = new ApiFeatures(Product.find(), req.query)
         .search()
         .filter()
@@ -21,7 +22,8 @@ exports.getAllProducts = catchAsyncError(async (req, res, next) => {
     const products = await apiFeatures.query;
     res.status(200).json({
         message: "Alhamdu Lillah, Route is working",
-        products
+        products,
+        productCount
     });
 });
 //Get single product
