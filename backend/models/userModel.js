@@ -1,0 +1,61 @@
+const { Schema, model } = require("mongoose");
+const validator = require("validator");
+const { hash, compare } = require('bcryptjs');
+const { sign } = require('jsonwebtoken');
+const userSchema = Schema({
+    name: {
+        type: String,
+        required: [true, "Please enter your name!"],
+        maxLength: [30, "Name must be less than 30 chars"],
+        minLength: [5, "Name must be greter than 4 chars"],
+        trim: true
+    },
+    email: {
+        type: String,
+        required: [true, "Please enter your mail address!"],
+        unique: true,
+        validate: [validator.isEmail, "Please enter a valid Email"],
+        trim: true
+    },
+    password: {
+        type: String,
+        required: [true, "Please enter strong password!"],
+        minLength: [8, "Password should be greater than 8 chars!"],
+        trim: true,
+        select: false
+    },
+    avatar: {
+        public_id: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
+    },
+    role: {
+        type: String,
+        default: "user"
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+}, {
+    timestamps: true
+});
+userSchema.pre('save', async function (next) {
+    //update time working
+    if (!this.isModified('password')) {
+        next();
+    }
+    this.password = await bcrypt.hash(this.password, 10);
+});
+//JWT Token
+userSchema.methods.getJWTToken = function () {
+    return sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRY })
+}
+userSchema.methods.comparePassword = async function (enteredPassword) {
+    return await compare(enteredPassword, this.password);
+}
+
+module.exports = model('User', userSchema);

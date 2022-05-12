@@ -4,37 +4,39 @@ module.exports = model("Product", Schema({
     name: {
         type: String,
         required: [true, "Please enter a product name!"],
-        trim:true
+        trim: true
     },
     description: {
         type: String,
         required: [true, "Please enter a product description!"],
-        trim:true
+        trim: true
     },
     price: {
         type: Number,
         required: [true, "Please enter product price!"],
         maxLength: [8, "Price con't more than 8 digits!"],
-        trim:true
+        trim: true
     },
     rating: {
         type: Number,
         default: 0
     },
-    images: {
-        public_id: {
-            type: String,
-            required: true
-        },
-        url: {
-            type: String,
-            required: true
+    images: [
+        {
+            public_id: {
+                type: String,
+                required: true
+            },
+            url: {
+                type: String,
+                required: true
+            }
         }
-    },
+    ],
     category: {
         type: String,
         required: [true, "Please enter product category!"],
-        trim:true
+        trim: true
     },
     stock: {
         type: Number,
@@ -48,7 +50,7 @@ module.exports = model("Product", Schema({
     },
     reviews: [
         {
-            name: { type: String, required: true,trim:true },
+            name: { type: String, required: true, trim: true },
             rating: { type: Number, required: true },
             comment: { type: String, required: true }
         }
